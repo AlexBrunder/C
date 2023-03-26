@@ -1,0 +1,4 @@
+﻿  Test.c
+D:\工程文件\C工程文件\ConsoleApplication1\ConsoleApplication1\Test.c(53,2): warning C4013: “ClearList”未定义；假设外部返回 int
+D:\工程文件\C工程文件\ConsoleApplication1\ConsoleApplication1\Test.c(54,9): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“Lnode *”
+  ConsoleApplication1.vcxproj -> D:\工程文件\C工程文件\ConsoleApplication1\Debug\ConsoleApplication1.exe
