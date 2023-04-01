@@ -197,9 +197,9 @@ int delete(LinkList L, int i)
 }
 int main() {
 	LinkList B =TiM(6); //生成表长为6的链表	
-	int a = insertNewOne(B, 7, 7);
+	int a = insertNewOne(B, 6, 7);
 	printf("\n%d\n", a);
-	int C = find(B, 2); //查找第3个元素 并且返回他的值 找不到则返回0
+	int C = find(B, 6); //查找第3个元素 并且返回他的值 找不到则返回0
 	printf("\n%d\n", C);
 	free(B);
 	return 0;
