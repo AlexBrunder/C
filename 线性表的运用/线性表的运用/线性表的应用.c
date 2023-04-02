@@ -159,6 +159,7 @@ void main() {
 	
 	LinkList A,B,C;
 	A = TiM(3);
+	printf("\n");
 	B = TiM(3);
 	C = MergeList_L(A, B);
 	for (int i = 0;i < 6;i++)
