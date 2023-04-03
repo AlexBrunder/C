@@ -32,7 +32,7 @@ stack InitStack()
 //返回值：新的顺序栈
 stack StackPush(stack A,int e)
 {
-	if (A->top - A->base == A->stacksize)
+	if (A->top - A->base == A->stacksize)//说明栈满了，不能再加入元素
 	{
 		return 0;
 	}
