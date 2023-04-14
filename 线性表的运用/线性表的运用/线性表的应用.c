@@ -141,7 +141,7 @@ LinkList MergeList_L(LinkList A, LinkList B)
 
 void main() {
 	//线性表的测试
-	/*
+	
 	list LA,LB,LC;
 	
 	int A[100] = { 1,7,8,8,12,14};
@@ -155,8 +155,9 @@ void main() {
 		printf("%d\n",LC->elem[i]);
 	}
 	printf("LC->length=%d\n",LC->length);
-	*/
 	
+	
+	/*
 	LinkList A,B,C;
 	A = TiM(3);
 	printf("\n");
@@ -166,7 +167,7 @@ void main() {
 	{
 		C = C->next;
 		printf("C->data = %d\n", C->data);
-	}
+	}*/
 	
  
 }
