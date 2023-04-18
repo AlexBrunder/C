@@ -135,7 +135,7 @@ void main()
 {
 	//Ë³ÐòÕ»µÄ²¿·Ö
 
-	/*
+	
 	stack newStack;
 	newStack = InitStack();
 	
@@ -151,8 +151,8 @@ void main()
 	ClearStack(newStack);
 	printf("%d\n", *(newStack->base));
 	
-	*/
-	/*
+	
+	
 	for (int b=0; b < 5; b++)
 	{
 		printf("%d\n", *(newStack->base+b));
@@ -161,13 +161,14 @@ void main()
 	int length;
 	length=StackLength(newStack);
 	printf("%d\n",length);
-	*/
+	
 
+	/*
 	LinkStack S;
 	S = (LinkStack)malloc(sizeof(StackNode));
 	S = LinkStackPush(S, 8);
 	S = LinkStackPush(S, 100);
 	int e;
 	e = getTop(S);
-	printf("%d\n", e);
+	printf("%d\n", e);*/
 }

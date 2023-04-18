@@ -1,6 +1,10 @@
 ﻿  TEST.c
-D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(19,2): warning C4013: “listEmpty”未定义；假设外部返回 int
-D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(22,9): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“Lnode *”
-D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(22,9): warning C4313: "printf": 格式字符串中的 "%d" 与类型为 "Lnode *" 的参数 1 冲突
-D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(57): warning C4716: “destory”: 必须返回一个值
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(102,10): warning C4473: “scanf_s”: 没有为格式字符串传递足够的参数
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(102,10): message : 占位符和其参数预计 2 可变参数，但提供的却是 1 参数
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(102,10): message : 缺失的可变参数 2 为格式字符串“%c”所需
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(102,10): message : 此参数用作缓冲区大小
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(201,11): warning C4098: “LeadCount”:“void”函数返回值
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(131): warning C4715: “PreOrderTraverse”: 不是所有的控件路径都返回值
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(149): warning C4715: “MidOrderTraverse”: 不是所有的控件路径都返回值
+D:\工程文件\C工程文件\TEXT\TEXT\TEST.c(167): warning C4715: “BackOrderTraverse”: 不是所有的控件路径都返回值
   TEXT.vcxproj -> D:\工程文件\C工程文件\TEXT\x64\Debug\TEXT.exe
