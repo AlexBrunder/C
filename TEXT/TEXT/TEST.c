@@ -10,71 +10,77 @@ typedef struct Data
 }Data;
 //二叉树的定义end
 
-//定义链栈结点
-typedef struct LinkStackNode
+//顺序队列的定义
+#define MAXQSIZE 100
+typedef struct {
+	Data** base;
+	int length;
+	int front;
+	int rear;
+}SqQueue, * Squeue;
+
+
+/*        队列的算法start                   */
+
+// 初始化队列的操作
+//返回值：队列的地址
+//参数:无
+Squeue Initqueue()
 {
-	Data* node;
-	struct LinkStackNode* next;
-}LinkStackNode, * LsNode;
-
-//定义链栈
-typedef struct Linkstack
-{
-	LsNode top;                 //定义栈顶指针，栈顶是允许插入和删除的一端
-	LsNode base;                //定义栈底指针，是不允许进行插入和删除元素的一端
-}LinkStack, * Ls;
-
-// 创建一个空栈
-void InitStack(Ls mystack);
-
-//向栈中插入元素e
-void InsertStack(Ls mystack, Data* e);     //向栈中插入元素不存在栈满问题但存在栈空问题，只能在栈顶处插入元素
-
-//若栈不空则删除栈顶元素，并将栈顶元素的值作为函数返回值返回
-Data* PopStack(Ls mystack);
-
-void InitStack(Ls mystack)
-{
-	mystack->top = mystack->base = (LsNode)malloc(sizeof(LinkStackNode));
-	mystack->base->next = NULL;
-	printf("创建空栈成功\n");
+	Squeue Q;
+	Q = (Squeue)malloc(sizeof(SqQueue));
+	Q->base = (Data**)malloc(MAXQSIZE * sizeof(Data*));
+	Q->front = Q->rear = 0;
+	Q->length = 0;
+	return Q;
 }
 
-
-
-void InsertStack(Ls mystack, Data* e)            /*新加入的节点永远为第一个节点，头指针为最后一个节点*/
+//队列的插入 队列的插入实在队列的尾部进行的
+//参数：队列的地址，插入的值
+//返回值：新的队列地址
+void inserE(Squeue SU, Data* e)
 {
-	LsNode p = (LsNode)malloc(sizeof(LinkStackNode));    //新建一个栈节点，栈节点中的数据为树
-	if (!p)                                              
+	if ((SU->rear + 1) % MAXQSIZE == SU->front)
 	{
-		printf("ERROR：申请内存失败\n");
-		return;
+		return SU;
 	}
-	p->node = e;                                          //将数据传入数据节点
-	p->next = mystack->top;                               //将新节点中的next域指向栈顶
-	mystack->top = p;                                     //修改栈顶为新节点的地址
+	*(SU->base + SU->length) = e;
+	SU->rear = (SU->rear + 1) % MAXQSIZE;
+	SU->length++;
+
 }
 
-
-
-Data* PopStack(Ls mystack)
+//删除元素，顺序队列从队头删除元素
+//删除完成之后头指针++
+//参数：队列的地址
+//返回值：被删除的元素
+Data* deleE(Squeue SU)
 {
-	if (mystack->top->next != NULL)                   /* 栈的头指针指向最后一个节点，最后一个节点中的next域为空值，栈顶是第一个节点 */
-	{
-		LsNode temp;//栈节点指针  栈节点：包括树的指针，指向下一个节点的指针
-		Data* t;    //新建一个指向树的指针
-
-		temp = mystack->top; //将栈顶的指针（栈的第一个节点的地址） 赋值给temp。temp指向了栈的第一个节点
-		t = temp->node;      //t保存了第一一个栈节点的数据（树）
-
-		mystack->top = mystack->top->next;    //将栈顶指针修改为 指向下一个节点
-		free(temp);                           //释放栈顶    
-
-		return t;                             //返回栈顶节点的数据
-	}
-	return NULL;
-
+	Data* x;
+	x = *(SU->base + SU->front);
+	SU->front = (SU->front + 1) % MAXQSIZE;
+	printf("%c", x->data);
+	return x;
 }
+
+//判断队列是否为空
+//参数： 队列地址
+//返回值：为空是：1   不为空：0
+int Sqempty(Squeue SU)
+{
+	if (SU->base == SU->front )
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+/*        队列的算法end                     */
+
+
+
 
 /*       二叉树创建算法start                */
 /*                                          */
@@ -208,61 +214,28 @@ void LeadCount(Data* T, int* i)
 	LeadCount(T->Rtree, i);
 }
 
-
-
-void MiddleOrderTraverse(Data* root, Ls mystack)
+void LevelOrder(Data* b)
 {
-
-
-	//中序遍历，先遍历左子树，在遍历根结点，最后遍历右子树，对左右子树的遍历也遵循左根右的原则
-	//利用栈来实现中序遍历的非递归算法
-
-
-	Data* m = root;
-
-	//先判断二叉树是不是为空
-	if (!root)
+	Data* p = (Data*)malloc(sizeof(Data));  Squeue qu; //树节点的指针，栈指针
+	int i;
+	qu = Initqueue();
+	inserE(qu, b);
+	while (!(i = Sqempty(qu)))
 	{
-		return;
-	}
-
-	while (1)
-	{
-		//根结点入栈
-		Data* temp;
-
-		if (m)
+		p = deleE(qu);
+		if (p->Ltree != NULL)
 		{
-			InsertStack(mystack, m);
-			m = m->Ltree;                        //先沿着左子树深入直到到达左子树为空的结点
+			inserE(qu, p->Ltree);
 		}
-		else
+		if (p->Rtree != NULL)
 		{
-			temp = PopStack(mystack);
-			//当到达左子树为空的结点，将当前结点元素进行退栈，即输出当前结点的值，然后继续访问当前节点的右子树。
-			//整个过程是不断重复地过程即沿着左子树深入直至为空，然会输出当前栈顶元素的值，然会返回上一结点元素，然后继续访问当前节点的右子树，所以有后深入的先返回的特性，
-			//可以运用站的特性实现此算法，而实现返回上一个结点是通过退栈这一操作完成的
-			printf("%c", temp->data);
-			m = temp->Rtree;
-
-		}
-		if ((mystack->top == mystack->base) && m == NULL) //当栈为空 和 遍历为到空 时 结束循环；
-		{
-			break;
+			inserE(qu, p->Rtree);
 		}
 	}
 }
-
-
 void main()
 {
-	Data* FirstTree = (Data*)malloc(sizeof(Data));/*按照线序遍历的顺序构造树*/
-	FirstTree = CreatePreTree(FirstTree);
-	printf("\n");
-	LinkStack Stack;
-	Ls ls= &Stack;
-	InitStack(ls);  //构造一个空栈
-	MiddleOrderTraverse(FirstTree, ls);
-	printf("\n");
-	MidOrderTraverse(FirstTree);
+	Data* T = (Data*)malloc(sizeof(Data));
+	T = CreatePreTree(T);
+	LevelOrder(T);
 }

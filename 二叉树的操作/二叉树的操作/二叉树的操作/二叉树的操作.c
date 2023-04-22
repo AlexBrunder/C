@@ -41,7 +41,7 @@ void InitStack(Ls mystack)
 }
 
 
-
+//ÈëÕ»
 void InsertStack(Ls mystack, Data* e)            /*ĞÂ¼ÓÈëµÄ½ÚµãÓÀÔ¶ÎªµÚÒ»¸ö½Úµã£¬Í·Ö¸ÕëÎª×îºóÒ»¸ö½Úµã*/
 {
 	LsNode p = (LsNode)malloc(sizeof(LinkStackNode));    //ĞÂ½¨Ò»¸öÕ»½Úµã£¬Õ»½ÚµãÖĞµÄÊı¾İÎªÊ÷
@@ -56,7 +56,7 @@ void InsertStack(Ls mystack, Data* e)            /*ĞÂ¼ÓÈëµÄ½ÚµãÓÀÔ¶ÎªµÚÒ»¸ö½Úµã£
 }
 
 
-
+//³öÕ»
 Data* PopStack(Ls mystack)
 {
 	if (mystack->top->next != NULL)                   /* Õ»µÄÍ·Ö¸ÕëÖ¸Ïò×îºóÒ»¸ö½Úµã£¬×îºóÒ»¸ö½ÚµãÖĞµÄnextÓòÎª¿ÕÖµ£¬Õ»¶¥ÊÇµÚÒ»¸ö½Úµã */
@@ -261,7 +261,7 @@ void main()
 	printf("\n");
 	Ls ls = (Ls)malloc(sizeof(LinkStack));
 	InitStack(ls);  //¹¹ÔìÒ»¸ö¿ÕÕ»
-	MiddleOrderTraverse(FirstTree, ls);
+	MiddleOrderTraverse(FirstTree, ls); //·Çµİ¹éÖĞĞò±éÀú·¨
 	printf("\n");
-	MidOrderTraverse(FirstTree);
+	MidOrderTraverse(FirstTree);        //µİ¹éÖĞĞò±éÀú·¨
 }
