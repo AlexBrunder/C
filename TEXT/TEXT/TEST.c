@@ -1,241 +1,70 @@
-#include<stdio.h>
-#include<stdlib.h>
-
-//二叉树中节点的定义start
-typedef struct Data
+#include <stdio.h>
+#include <stdlib.h>
+#define MAXInt 0//表示极大值，用于权值（即网） 
+#define MVNum 100 //最大顶点数
+//邻接矩阵构造法 
+typedef struct
 {
-	char data;
-	struct Data* Ltree;
-	struct Data* Rtree;
-}Data;
-//二叉树的定义end
-
-//顺序队列的定义
-#define MAXQSIZE 100
-typedef struct {
-	Data** base;
-	int length;
-	int front;
-	int rear;
-}SqQueue, * Squeue;
+	int vex[MVNum];//顶点表
+	int arcs[MVNum][MVNum];//邻接矩阵
+	int vexnum, arcnum;
+}AMGraph;
 
 
-/*        队列的算法start                   */
-
-// 初始化队列的操作
-//返回值：队列的地址
-//参数:无
-Squeue Initqueue()
+int LocateVex(AMGraph G,int v) //查询顶点V在图G中的下标位置
 {
-	Squeue Q;
-	Q = (Squeue)malloc(sizeof(SqQueue));
-	Q->base = (Data**)malloc(MAXQSIZE * sizeof(Data*));
-	Q->front = Q->rear = 0;
-	Q->length = 0;
-	return Q;
-}
-
-//队列的插入 队列的插入实在队列的尾部进行的
-//参数：队列的地址，插入的值
-//返回值：新的队列地址
-void inserE(Squeue SU, Data* e)
-{
-	if ((SU->rear + 1) % MAXQSIZE == SU->front)
+	for (int i = 0; i < G.vexnum; i++)
 	{
-		return SU;
-	}
-	*(SU->base + SU->length) = e;
-	SU->rear = (SU->rear + 1) % MAXQSIZE;
-	SU->length++;
-
-}
-
-//删除元素，顺序队列从队头删除元素
-//删除完成之后头指针++
-//参数：队列的地址
-//返回值：被删除的元素
-Data* deleE(Squeue SU)
-{
-	Data* x;
-	x = *(SU->base + SU->front);
-	SU->front = (SU->front + 1) % MAXQSIZE;
-	printf("%c", x->data);
-	return x;
-}
-
-//判断队列是否为空
-//参数： 队列地址
-//返回值：为空是：1   不为空：0
-int Sqempty(Squeue SU)
-{
-	if (SU->base == SU->front )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
+		if (v == G.vex[i])
+			return i;
 	}
 }
-/*        队列的算法end                     */
-
-
-
-
-/*       二叉树创建算法start                */
-/*                                          */
-//创建节点的算法
-//返回值：一个节点的地址
-//参数：一个char数
-Data* CreatData(char a)
+void CreateUDN(AMGraph G)//构建无向网 
 {
-	Data* Ndata = (Data*)malloc(sizeof(Data));
-	Ndata->data = a;
-	Ndata->Ltree = NULL;
-	Ndata->Rtree = NULL;
-	return Ndata;
-}
-
-
-//按照先序排序的方式创建二叉树
-// 按先序的顺序输入节点，空节点用 # 表示
-//参数：树的地址
-//返回值：新树的地址
-Data* CreatePreTree(Data* T)
-{
-
-	char ch;
-	scanf_s("%c", &ch);
-	if (ch == '#')
+	int w;//权值信息
+	int v1, v2;//某条边依附的两个顶点 
+	scanf_s("%d%d", &G.vexnum, &G.arcnum);
+	for (int i = 0; i < G.vexnum; i++)
+		scanf_s("%d", &G.vex[i]);
+	for (int i = 0; i < G.vexnum; i++)//初始化邻接矩阵，所有元素初始化为极大值 
+		for (int j = 0; j < G.arcnum; j++)
+			G.arcs[i][j] = MAXInt;
+	for (int i = 0; i < G.arcnum; i++)//这里表示输入的依附顶点之间的权值是由边的个数来决定的 
 	{
-		T = NULL;
-	}
-	else
-	{
-		T = CreatData(ch);
-		T->Ltree = CreatePreTree(T->Ltree);
-		T->Rtree = CreatePreTree(T->Rtree);
-	}
-	return T;
-}
-
-//先序遍历的算法（输出节点的值）DLR
-//参数：树的地址
-//返回值：0：为空值 1：成功
-int PreOrderTraverse(Data* T)
-{
-	if (T == NULL)
-	{
-		return 0;
-	}
-	else
-	{
-		printf("%c", T->data);
-		PreOrderTraverse(T->Ltree);
-		PreOrderTraverse(T->Rtree);
+		scanf_s("%d%d%d", &v1, &v2, &w);
+		int m = LocateVex(G, v1);
+		int n = LocateVex(G, v2);
+		G.arcs[m][n] = w;
+		G.arcs[n][m] = G.arcs[m][n];//无向网特有的对称矩阵 
 	}
 }
-
-//中序遍历的算法（输出节点的值）LDR
-//参数：树的地址
-//返回值：0：为空值 1：成功
-int MidOrderTraverse(Data* T)
+void PrintAMGraph(AMGraph G)
 {
-	if (T == NULL)
+	for (int i = 0; i < G.vexnum; i++)
 	{
-		return 0;
-	}
-	else
-	{
-		MidOrderTraverse(T->Ltree);
-		printf("%c", T->data);
-		MidOrderTraverse(T->Rtree);
-
-	}
-}
-
-
-//后序遍历的算法（输出节点的值）LRD
-//参数：树的地址
-//返回值：0：为空值 1：成功
-int BackOrderTraverse(Data* T)
-{
-	if (T == NULL)
-	{
-		return 0;
-	}
-	else
-	{
-		BackOrderTraverse(T->Ltree);
-		BackOrderTraverse(T->Rtree);
-		printf("%c\n", T->data);
-	}
-}
-
-//计算二叉树的深度算法
-//参数：树的地址
-//返回值：树的深度int
-int Depth(Data* T)
-{
-	int m = 0, n = 0;
-	if (T == NULL)
-	{
-		return 0;//深度为0
-	}
-	else
-	{
-		m = Depth(T->Ltree);
-		n = Depth(T->Rtree);
-		if (m > n)
+		for (int j = 0; j < G.vexnum; j++)
 		{
-			return m + 1;
+			printf("%d ", G.arcs[i][j]);
 		}
-		else
-		{
-			return n + 1;
-		}
+		printf("\n");
 	}
 }
-
-//计算叶子节点的个数
-//参数：树的地址
-//返回值：个数int
-void LeadCount(Data* T, int* i)
+int main()
 {
-	if (T == NULL)
-	{
-		return 0;
-	}
-	if (T->Ltree == NULL && T->Rtree == NULL)
-	{
-		(*i)++;
-	}
-	LeadCount(T->Ltree, i);
-	LeadCount(T->Rtree, i);
+	AMGraph G;
+	CreateUDN(G);
+	printf("邻接矩阵为：\n");
+	PrintAMGraph(G);
+	return 0;
 }
-
-void LevelOrder(Data* b)
-{
-	Data* p = (Data*)malloc(sizeof(Data));  Squeue qu; //树节点的指针，栈指针
-	int i;
-	qu = Initqueue();
-	inserE(qu, b);
-	while (!(i = Sqempty(qu)))
-	{
-		p = deleE(qu);
-		if (p->Ltree != NULL)
-		{
-			inserE(qu, p->Ltree);
-		}
-		if (p->Rtree != NULL)
-		{
-			inserE(qu, p->Rtree);
-		}
-	}
-}
-void main()
-{
-	Data* T = (Data*)malloc(sizeof(Data));
-	T = CreatePreTree(T);
-	LevelOrder(T);
-}
+/*
+测试数据（只需要输入矩阵的前一半的元素值）
+5 6
+1 2 3 4 5
+1 2 3
+1 4 6
+2 3 2
+2 5 8
+3 1 1
+3 4 5
+*/
