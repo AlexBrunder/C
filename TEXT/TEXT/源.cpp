@@ -1,68 +1,87 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define MAXInt 0//表示极大值，用于权值（即网） 
-#define MVNum 100 //最大顶点数
-//邻接矩阵构造法 
+//- - - - -图的邻接表存储表示－ －－－－
+#define MAX 100   //最大顶点数
+typedef struct ArcNode   //边结点
+{
+    int adjvex;  //边顶点位置	  
+    struct ArcNode* nextarc;
+}ArcNode;
+typedef struct VNode  //顶点
+{
+    char data;
+    ArcNode* firstarc;
+}VNode;
 typedef struct
 {
-	int vex[MVNum];//顶点表
-	int arcs[MVNum][MVNum];//邻接矩阵
-	int vexnum, arcnum;
-}AMGraph;
-int LocateVex(AMGraph& G, int v) //查询顶点V在图G中的下标位置
+    VNode AdjList[MAX];
+    int vexnum, arcnum;  //图的当前顶点数和边数
+}ALGraph;
+
+int LocateVex(ALGraph G, char v) //根据v点信息，找到相应坐标
 {
-	for (int i = 0; i < G.vexnum; i++)
-	{
-		if (v == G.vex[i])
-			return i;
-	}
+    for (int i = 0; i < G.vexnum; ++i)
+    {
+        if (G.AdjList[i].data == v)
+            return i;
+    }
+    return -1;
 }
-void CreateUDN(AMGraph& G)//构建无向网 
+int CreateUDG(ALGraph* G)
 {
-	int w;//权值信息
-	int v1, v2;//某条边依附的两个顶点 
-	scanf_s("%d%d", &G.vexnum, &G.arcnum);
-	for (int i = 0; i < G.vexnum; i++)
-		scanf_s("%d", &G.vex[i]);
-	for (int i = 0; i < G.vexnum; i++)//初始化邻接矩阵，所有元素初始化为极大值 
-		for (int j = 0; j < G.arcnum; j++)
-			G.arcs[i][j] = MAXInt;
-	for (int i = 0; i < G.arcnum; i++)//这里表示输入的依附顶点之间的权值是由边的个数来决定的 
-	{
-		scanf_s("%d%d%d", &v1, &v2, &w);
-		int m = LocateVex(G, v1);
-		int n = LocateVex(G, v2);
-		G.arcs[m][n] = w;
-		G.arcs[n][m] = G.arcs[m][n];//无向网特有的对称矩阵 
-	}
+    char v1, v2;
+    int i, j;
+    ArcNode* p1, * p2;
+    printf("输入顶点数和边数");
+    scanf_s("%d%d", &G->vexnum, &G->arcnum);
+
+    printf("输入顶点数据：");
+    for (int c = 0; c < G->vexnum; ++c)
+    {
+        scanf_s(" %c", &G->AdjList[c].data);  //%c前面空格就是用来屏蔽空白符的
+        G->AdjList[c].firstarc = NULL;       //在用"%c"输入时，空格和“转义字符”均作为有效字符
+    }
+    printf("输入边的两个顶点\n");
+    for (int k = 0; k < G->arcnum; ++k)
+    {
+        scanf_s(" %c %c", &v1, &v2);
+        i = LocateVex(*G, v1);  //确定顶点位置
+        j = LocateVex(*G, v2);
+
+        p1 = (ArcNode*)malloc(sizeof(ArcNode));  //p1插入边表头部
+        p1->adjvex = i;
+        p1->nextarc = G->AdjList[j].firstarc;  //链表前插法
+        G->AdjList[j].firstarc = p1;
+
+        p2 = (ArcNode*)malloc(sizeof(ArcNode));
+        p2->adjvex = j;
+        p2->nextarc = G->AdjList[i].firstarc;
+        G->AdjList[i].firstarc = p2;
+        free(p1);
+        free(p2);
+    }
+    return 0;
 }
-void PrintAMGraph(AMGraph& G)
+
+void output_AL(ALGraph G)  //输出
 {
-	for (int i = 0; i < G.vexnum; i++)
-	{
-		for (int j = 0; j < G.vexnum; j++)
-		{
-			printf("%d ", G.arcs[i][j]);
-		}
-		printf("\n");
-	}
+    for (int i = 0; i < G.vexnum; i++)
+    {
+        printf("顶点%c", G.AdjList[i].data);
+        ArcNode* p = G.AdjList[i].firstarc;
+        while (p != NULL)
+        {
+            printf("->%d", p->adjvex); //输出下标
+            //printf("->%c",G.AdjList[p->adjvex].data);  //输出顶点元素
+            p = p->nextarc;
+        }
+        printf("\n");
+    }
 }
 int main()
 {
-	AMGraph G;
-	CreateUDN(G);
-	printf("邻接矩阵为：\n");
-	PrintAMGraph(G);
-	return 0;
+    ALGraph G;
+    CreateUDG(&G);
+    output_AL(G);
+    return 0;
 }
-/*
-测试数据（只需要输入矩阵的前一半的元素值）
-5 6
-1 2 3 4 5
-1 2 3
-1 4 6
-2 3 2
-2 5 8
-3 1 1
-3 4 5
-*/
