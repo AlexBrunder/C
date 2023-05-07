@@ -5,7 +5,7 @@
 #define MVNum 100
 //顶点节点 数组类型
 typedef struct VNode {
-	int data; //顶点信息
+	char data; //顶点信息
 	struct ArcNode* firstarc; //指向对应边节点（边节点中存储对应的顶点信息）
 }VNode,AdjList[MVNum];
 
@@ -26,7 +26,7 @@ typedef struct {
 //查找顶点表对应值的下标
 //参数：图,要找的值
 //返回值：int 下标
-int LocateVex(ALGraph G, int v) //根据v点信息，找到相应坐标
+int LocateVex(ALGraph G, char v) //根据v点信息，找到相应坐标
 {
 	for (int i = 0; i < G.vexnum; i++)
 	{
@@ -40,7 +40,7 @@ int LocateVex(ALGraph G, int v) //根据v点信息，找到相应坐标
 //用邻接表创建无向图算法
 void CreateUDG(ALGraph &G)
 {
-	int v1, v2;
+	char v1, v2;
 	int m, n;
 	printf("请输入有多少顶点数\n");
 	scanf_s("%d",&G.vexnum);
@@ -50,7 +50,7 @@ void CreateUDG(ALGraph &G)
 	for (int i = 0; i < G.vexnum; i++)
 	{  
 		//给顶点表赋初值
-		scanf_s("%d",&G.AdjList[i].data);
+		scanf_s(" %c",&G.AdjList[i].data,1);
 		G.AdjList[i].firstarc = NULL;
 	}
 
@@ -58,7 +58,7 @@ void CreateUDG(ALGraph &G)
 	for (int k = 0; k < G.arcnum; k++)
 	{
 		printf("请输入一条边依附的两个顶点\n");
-		scanf_s("%d%d",&v1,&v2);
+		scanf_s(" %c %c",&v1,1,&v2,1);
 		m = LocateVex(G,v1);
 		n = LocateVex(G,v2);
 		ArcNode* p1=(ArcNode*)malloc(sizeof(ArcNode));
@@ -82,11 +82,11 @@ void PrintfALG(ALGraph &G)
 	printf("\n");
 	for (int i = 0; i < G.vexnum; i++)
 	{
-		printf("%d ",G.AdjList[i].data);
+		printf("%c",G.AdjList[i].data);
 		p = G.AdjList[i].firstarc;
 		while (p)
 		{
-			printf("%d ", p->adjvex);
+			printf("->%d", p->adjvex);
 			p = p->nextarc;
 		}
 		printf("\n");
@@ -100,3 +100,18 @@ int main()
 	PrintfALG(graph);
 	return 0;
 }
+
+/*
+ 参考参数
+ 4 3
+ A B C D
+ A B
+ A C
+ C D
+
+ 输出
+ A->2->1
+ B->0
+ C->3->0
+ D->2
+*/
